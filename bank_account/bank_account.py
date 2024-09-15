@@ -8,18 +8,18 @@ class BankAccount:
         # Validate account_number
         if type(account_number) is not int:
             raise ValueError("Account number must be an integer.")
-        self._account_number = account_number
+        self.__account_number = account_number
         
         # Validate client_number
         if type(client_number) is not int:
             raise ValueError("Client number must be an integer.")
-        self._client_number = client_number
+        self.__client_number = client_number
         
         # Validate balance
         try:
-            self._balance = float(balance)
+            self.__balance = float(balance)
         except ValueError:
-            self._balance = 0.0
+            self.__balance = 0.0
 
     # Property for account_number
     @property
@@ -29,7 +29,7 @@ class BankAccount:
         :return:
             int: account number of the bank account
         """
-        return self._account_number
+        return self.__account_number
 
     # Property for client_number
     @property
@@ -39,7 +39,7 @@ class BankAccount:
         :return:
             int: client number of the bank account
         """
-        return self._client_number
+        return self.__client_number
 
     # Property for balance
     @property
@@ -49,14 +49,14 @@ class BankAccount:
         :return:
             float: current balance of the bank account
         """
-        return self._balance
+        return self.__balance
 
     # Update balance method
     def update_balance(self, amount: float) -> None:
         """
         Updates balance by adding the given amount
         """
-        self._balance += float(amount)
+        self.__balance += float(amount)
         
 
     # Deposit method
@@ -90,8 +90,8 @@ class BankAccount:
             raise ValueError(f"Withdraw amount: {amount} must be numeric.")
         if amount <= 0:
             raise ValueError(f"Withdrawal amount: ${amount:,.2f} must be positive.")
-        if amount > self._balance:
-            raise ValueError(f"Withdrawal amount: ${amount:,.2f} must not exceed the account balance: ${self._balance:,.2f}")
+        if amount > self.__balance:
+            raise ValueError(f"Withdrawal amount: ${amount:,.2f} must not exceed the account balance: ${self.__balance:,.2f}")
         
         self.update_balance(-amount)
 
@@ -102,6 +102,6 @@ class BankAccount:
         :returns: 
             str: containing bank balance and account number
         """
-        return f"Account Number: {self._account_number} Balance: ${self._balance:,.2f}"
+        return f"Account Number: {self.__account_number} Balance: ${self.__balance:,.2f}"
 
 
