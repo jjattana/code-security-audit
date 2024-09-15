@@ -24,26 +24,51 @@ class BankAccount:
     # Property for account_number
     @property
     def account_number(self) -> int:
+        """
+        Gets account number of the bank account
+        :return:
+            int: account number of the bank account
+        """
         return self._account_number
 
     # Property for client_number
     @property
     def client_number(self) -> int:
+        """
+        Gets the client number of the bank account
+        :return:
+            int: client number of the bank account
+        """
         return self._client_number
 
     # Property for balance
     @property
     def balance(self) -> float:
+        """
+        Gets the current balance of the bank account
+        :return:
+            float: current balance of the bank account
+        """
         return self._balance
 
     # Update balance method
     def update_balance(self, amount: float) -> None:
+        """
+        Updates balance by adding the given amount
+        """
         self._balance += float(amount)
         
 
     # Deposit method
     def deposit(self, amount: float) -> None:
-        # Type check without isinstance
+        """
+        Deposits given amount into the bank account
+
+        amount: float
+
+        Raises 
+        ValueError: If the deposit amount is not float or negative
+        """
         if type(amount) not in (int, float):
             raise ValueError(f"Deposit amount: {amount} must be numeric.")
         if amount <= 0:
@@ -53,7 +78,14 @@ class BankAccount:
 
     # Withdraw method
     def withdraw(self, amount: float) -> None:
-        # Type check without isinstance
+        """
+        Withddraws the given amount from the bank account
+
+        amount: float
+
+        Raises
+        ValueError: If the withdrawl amount is not float, negative or more than the current balance,
+        """
         if type(amount) not in (int, float):
             raise ValueError(f"Withdraw amount: {amount} must be numeric.")
         if amount <= 0:
@@ -65,12 +97,11 @@ class BankAccount:
 
     # String representation method
     def __str__(self) -> str:
+        """
+        Returns account number and current balance as a string reprentation
+        :returns: 
+            str: containing bank balance and account number
+        """
         return f"Account Number: {self._account_number} Balance: ${self._balance:,.2f}"
 
-# Example usage:
-# account = BankAccount(12345, 67890, 500.0)
-# print(account)
-# account.deposit(200.0)
-# print(account)
-# account.withdraw(100.0)
-# print(account)
+
