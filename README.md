@@ -12,3 +12,6 @@ Assignment 1: Classes, Encapsulation and Unit Test Planning. This assignment inv
 
 ## Encapsulation
 Encapsulation in the `BankAccount` and `Transaction` classes is done by restricting direct access to the class attributes and providing controlled access through public methods. Private attributes, like `account_number`, `client_number`, and `balance`, are protected using name mangling (with double underscores, such as `__account_number`), which stops them from being accessed or changed directly from outside the class.
+
+## Assignment 2
+In this assignment, I will extend the `BankAccount` class by creating new types of accounts as subclasses. These new account types will inherit common features from `BankAccount`, but each one will have its own special version of a method. This demonstrates polymorphism, where different objects can use the same method in their own unique way. The focus is to show how this works and to test that each subclass behaves as expected.
