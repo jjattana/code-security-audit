@@ -15,3 +15,7 @@ Encapsulation in the `BankAccount` and `Transaction` classes is done by restrict
 
 ## Assignment 2
 In this assignment, I will extend the `BankAccount` class by creating new types of accounts as subclasses. These new account types will inherit common features from `BankAccount`, but each one will have its own special version of a method. This demonstrates polymorphism, where different objects can use the same method in their own unique way. The focus is to show how this works and to test that each subclass behaves as expected.
+
+## Polymorphism
+
+Polymorphism in this assignment was achieved through method overriding in the `BankAccount` subclasses: `ChequingAccount`, `SavingsAccount`, and `InvestmentAccount`. Each subclass implements its own version of the `get_service_charges()` and `__str__()` methods, allowing them to provide specific behaviors while maintaining a common interface defined in the `BankAccount` class. This enables different account types to be used interchangeably, allowing for dynamic behavior based on the object's actual class.
