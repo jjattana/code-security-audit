@@ -4,8 +4,8 @@ Author: ACE Faculty
 Modified by: Jashanpreet Kaur Jattana
 Date: 2024-09-14
 Usage: To execute all tests in the terminal execute 
-the following command:
-    python -m unittest tests/test_bank_account.py
+the following command:python -m unittest tests/test_
+    bank_account.py
 """
 
 import unittest
