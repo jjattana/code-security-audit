@@ -3,135 +3,123 @@ Description:
 Author: Jashanpreet Kaur Jattana
 """
 
+from abc import ABC, abstractmethod
 from datetime import date
 
-class BankAccount:
-    BASE_SERVICE_CHARGE = 0.50
+class BankAccount(ABC):
+    """
+    Abstract base class for a bank account.
+    Cannot be instantiated directly. Subclasses must implement the get_service_charges method.
+    """
+    
+    def __init__(self, account_number, client_number, account_holder, balance, date_created=None):
+        """
+        Initializes a BankAccount object with the common attributes.
 
-    def __init__(self, account_number: int, client_number: int, balance: float, date_created: date):
-        # Validate account_number
-        if type(account_number) is not int:
-            raise ValueError("Account number must be an integer.")
-        self.__account_number = account_number
+        :param account_number: The account number of the bank account
+        :param account_holder: The name of the account holder
+        :param balance: The balance of the bank account
+        :param date_created: The date the account was created (defaults to today's date if not provided)
+        """
+        self.account_number = account_number
+        self.client_number = client_number
+        self.account_holder = account_holder
+        self.balance = balance
         
-        # Validate client_number
-        if type(client_number) is not int:
-            raise ValueError("Client number must be an integer.")
-        self.__client_number = client_number
-        
-        # Validate balance
-        try:
-            self.__balance = float(balance)
-        except ValueError:
-            self.__balance = 0.0
-
-        # Validate date_created
+        # Validate the date_created argument. If not a date, use today's date.
         if isinstance(date_created, date):
-            self.__date_created = date_created
+            self._date_created = date_created
         else:
-            self.__date_created = date.today()
+            self._date_created = date.today()
 
-    # Property for account_number
-    @property
-    def account_number(self) -> int:
+    @abstractmethod
+    def get_service_charges(self):
         """
-        Gets account number of the bank account
-        :return:
-            int: account number of the bank account
+        Abstract method to calculate and return the service charges for the bank account.
+        Must be implemented by subclasses.
         """
-        return self.__account_number
+        pass
 
-    # Property for client_number
-    @property
-    def client_number(self) -> int:
+    def deposit(self, amount):
         """
-        Gets the client number of the bank account
-        :return:
-            int: client number of the bank account
-        """
-        return self.__client_number
+        Deposit the given amount into the bank account.
 
-    # Property for balance
-    @property
-    def balance(self) -> float:
+        :param amount: The amount to deposit
         """
-        Gets the current balance of the bank account
-        :return:
-            float: current balance of the bank account
-        """
-        return self.__balance
+        if amount > 0:
+            self.balance += amount
+        else:
+            raise ValueError("Deposit amount must be positive")
 
-    # Property for date_created
-    @property
-    def date_created(self) -> date:
+    def withdraw(self, amount):
         """
-        Gets the date the bank account was created
-        :return:
-            date: the date the account was created
-        """
-        return self.__date_created
+        Withdraw the given amount from the bank account if sufficient funds are available.
 
-    # Update balance method
-    def update_balance(self, amount: float) -> None:
+        :param amount: The amount to withdraw
         """
-        Updates balance by adding the given amount
-        """
-        self.__balance += float(amount)
-        
+        if amount > 0:
+            if self.balance >= amount:
+                self.balance -= amount
+            else:
+                raise ValueError("Insufficient funds")
+        else:
+            raise ValueError("Withdrawal amount must be positive")
 
-    # Deposit method
-    def deposit(self, amount: float) -> None:
+    def get_balance(self):
         """
-        Deposits given amount into the bank account
+        Return the current balance of the bank account.
 
-        amount: float
+        :return: The balance of the account
+        """
+        return self.balance
 
-        Raises 
-        ValueError: If the deposit amount is not float or negative
+    def get_account_info(self):
         """
-        if type(amount) not in (int, float):
-            raise ValueError(f"Deposit amount: {amount} must be numeric.")
-        if amount <= 0:
-            raise ValueError(f"Deposit amount: ${amount:,.2f} must be positive.")
-        
-        self.update_balance(amount)
+        Return a dictionary containing account details.
 
-    # Withdraw method
-    def withdraw(self, amount: float) -> None:
+        :return: A dictionary with account details
         """
-        Withdraws the given amount from the bank account
+        return {
+            'account_number': self.account_number,
+            'client_number': self.client_number,
+            'account_holder': self.account_holder,
+            'balance': self.balance,
+            'date_created': self._date_created
+        }
 
-        amount: float
 
-        Raises
-        ValueError: If the withdrawal amount is not float, negative or more than the current balance,
-        """
-        if type(amount) not in (int, float):
-            raise ValueError(f"Withdraw amount: {amount} must be numeric.")
-        if amount <= 0:
-            raise ValueError(f"Withdrawal amount: ${amount:,.2f} must be positive.")
-        if amount > self.__balance:
-            raise ValueError(f"Withdrawal amount: ${amount:,.2f} must not exceed the account balance: ${self.__balance:,.2f}")
-        
-        self.update_balance(-amount)
+class ChequingAccount(BankAccount):
+    """
+    Concrete subclass of BankAccount representing a chequing account.
+    """
 
-    # Service charges method
-    def get_service_charges(self) -> float:
+    def get_service_charges(self):
         """
-        Returns the base service charges for the bank account
-        :return:
-            float: base service charge for the account
-        """
-        return self.BASE_SERVICE_CHARGE
+        Return the service charges for the chequing account.
 
-    # String representation method
-    def __str__(self) -> str:
+        Chequing accounts incur a 2% service charge.
+        :return: The calculated service charges based on the account balance
         """
-        Returns account number and current balance as a string representation
-        :returns: 
-            str: containing bank balance and account number
+        return self.balance * 0.02  # Example: 2% service charge for chequing accounts
+
+
+class SavingsAccount(BankAccount):
+    """
+    Concrete subclass of BankAccount representing a savings account.
+    """
+
+    def get_service_charges(self):
         """
-        return f"Account Number: {self.__account_number} Balance: ${self.__balance:,.2f}"
+        Return the service charges for the savings account.
+
+        Savings accounts incur a 1% service charge.
+        :return: The calculated service charges based on the account balance
+        """
+        return self.balance * 0.01  # Example: 1% service charge for savings accounts
+
+
+
+
 
 
 
