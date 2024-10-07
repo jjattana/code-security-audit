@@ -22,9 +22,9 @@ class TestChequingAccount(unittest.TestCase):
         self.assertEqual(account.date_created.strftime('%Y-%m-%d'), "2023-01-01")
 
     def test_init_invalid_overdraft_limit(self):
-        account = ChequingAccount(account_number=12345, client_number=67890, account_holder="John Doe", initial_balance=500.00, 
+        account = ChequingAccount(account_number=12345, client_number=67890, account_holder="Jashanpreet Jattana", initial_balance=500.00, 
                                    overdraft_limit="invalid", overdraft_rate=0.05, date_created="2023-01-01")
-        self.assertEqual(account.overdraft_limit, -100.00)
+        self.assertEqual(account.overdraft_limit, 1000.00)
 
     def test_init_invalid_overdraft_rate(self):
         account = ChequingAccount(account_number=12345, client_number=67890, account_holder="Jashanpreet Jattana", initial_balance=500.00, 

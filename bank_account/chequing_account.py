@@ -11,7 +11,7 @@ from bank_account.bank_account import BankAccount
 class ChequingAccount(BankAccount):
     BASE_SERVICE_CHARGE = 0.50 
 
-    def __init__(self, account_number, client_number, account_holder, initial_balance=0.0, overdraft_limit=-100, overdraft_rate=0.05, date_created=None):
+    def __init__(self, account_number, client_number, account_holder, initial_balance=500.0, overdraft_limit=1000, overdraft_rate=0.05, date_created=None):
         # Initialize the superclass
         super().__init__(account_number, client_number, account_holder, initial_balance)
 
@@ -19,7 +19,7 @@ class ChequingAccount(BankAccount):
         try:
             self.__overdraft_limit = float(overdraft_limit)
         except (ValueError, TypeError):
-            self.__overdraft_limit = -100.0
+            self.__overdraft_limit = 1000.0
 
         # Validate overdraft_rate
         try:
