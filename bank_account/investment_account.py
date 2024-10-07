@@ -7,13 +7,34 @@ from datetime import date
 from bank_account.bank_account import BankAccount
 
 class InvestmentAccount(BankAccount):
+    """Represents an investment account, inheriting from BankAccount.
+
+    Attributes:
+        BASE_SERVICE_CHARGE (float): The base service charge for the account.
+        MANAGEMENT_FEE (float): The standard management fee for the account.
+        WAIVED_FEE (float): The waived fee status for the management fee.
+    """
+    
     BASE_SERVICE_CHARGE = 2.50  
     MANAGEMENT_FEE = 0.50        
     WAIVED_FEE = 0               
 
     def __init__(self, account_number: int, client_number: int, balance: float, date_created: date, management_fee: float = WAIVED_FEE):
+        """Initializes an InvestmentAccount object.
+
+        Args:
+            account_number (int): The account number.
+            client_number (int): The client number associated with the account.
+            balance (float): The initial balance of the account.
+            date_created (date): The date the account was created.
+            management_fee (float, optional): The management fee for the account. Default is WAIVED_FEE.
+
+        Raises:
+            ValueError: If the management fee is negative.
+        """
         self._balance = float(balance)
         self._date_created = date_created
+        
         if not isinstance(management_fee, (int, float)) or management_fee < 0:
             raise ValueError("Management fee cannot be negative.")
         
@@ -23,11 +44,14 @@ class InvestmentAccount(BankAccount):
 
     @property
     def date_created(self):
+        """Returns the date the account was created."""
         return self._date_created
 
     def get_service_charges(self) -> float:
-        """
-        Calculate the service charges based on the account age and management fee.
+        """Calculate the service charges based on the account age and management fee.
+
+        Returns:
+            float: The calculated service charges.
         """
         account_age_years = self.calculate_account_age()
 
@@ -38,13 +62,20 @@ class InvestmentAccount(BankAccount):
         else:  
             return self.BASE_SERVICE_CHARGE + self.MANAGEMENT_FEE  
 
-    def calculate_account_age(self):
+    def calculate_account_age(self) -> int:
+        """Calculates the age of the account in years.
+
+        Returns:
+            int: The age of the account in years.
+        """
         age = (date.today() - self._date_created).days // 365
         return age
 
     def __str__(self) -> str:
-        """
-        String representation of the InvestmentAccount object.
+        """String representation of the InvestmentAccount object.
+
+        Returns:
+            str: A string describing the InvestmentAccount instance, including the management fee status.
         """
         if self.management_fee == self.WAIVED_FEE:
             fee_status = "Waived"
@@ -54,4 +85,5 @@ class InvestmentAccount(BankAccount):
         return (f"<{self.__class__.__name__} "
                 f"Management Fee: {fee_status} "
                 f"Account Type: Investment>")
+
 

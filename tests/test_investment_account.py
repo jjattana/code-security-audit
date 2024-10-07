@@ -8,9 +8,13 @@ from datetime import date, timedelta
 from bank_account.investment_account import InvestmentAccount
 
 class TestInvestmentAccount(unittest.TestCase):
+    """Unit test case for the InvestmentAccount class."""
 
     def setUp(self):
-        """Set up test case with valid parameters."""
+        """Set up test case with valid parameters.
+
+        This method is called before each test to set up a valid InvestmentAccount instance.
+        """
         self.valid_account_number = 12345
         self.valid_client_number = 67890
         self.valid_balance = 500.00
@@ -25,7 +29,10 @@ class TestInvestmentAccount(unittest.TestCase):
         )
 
     def test_init_valid(self):
-        """Test __init__ with valid parameters."""
+        """Test __init__ with valid parameters.
+
+        This test verifies that the InvestmentAccount initializes correctly with valid parameters.
+        """
         self.assertEqual(self.account.account_number, self.valid_account_number)
         self.assertEqual(self.account.client_number, self.valid_client_number)
         self.assertEqual(self.account._balance, self.valid_balance)
@@ -33,12 +40,18 @@ class TestInvestmentAccount(unittest.TestCase):
         self.assertEqual(self.account.management_fee, self.valid_management_fee)
 
     def test_init_invalid_management_fee(self):
-        """Test __init__ with invalid management fee type."""
+        """Test __init__ with invalid management fee type.
+
+        This test checks that a ValueError is raised when the management fee is of an invalid type.
+        """
         with self.assertRaises(ValueError):
             InvestmentAccount(self.valid_account_number, self.valid_client_number, self.valid_balance, self.valid_date_created, management_fee="invalid")
 
     def test_get_service_charges_more_than_ten_years(self):
-        """Test get_service_charges when date created is more than 10 years ago."""
+        """Test get_service_charges when date created is more than 10 years ago.
+
+        This test verifies that the service charge is calculated correctly for accounts older than 10 years.
+        """
         old_date = date.today() - timedelta(days=365 * 11)  # More than 10 years ago
         account = InvestmentAccount(self.valid_account_number, self.valid_client_number, self.valid_balance, old_date)
         expected_charge = InvestmentAccount.BASE_SERVICE_CHARGE  # $2.50
@@ -46,7 +59,10 @@ class TestInvestmentAccount(unittest.TestCase):
         self.assertEqual(expected_charge, round(actual_charge, 2))
 
     def test_get_service_charges_exactly_ten_years(self):
-        """Test get_service_charges when date created is exactly 10 years ago."""
+        """Test get_service_charges when date created is exactly 10 years ago.
+
+        This test verifies that the service charge is correctly calculated for accounts exactly 10 years old.
+        """
         ten_years_ago = date.today() - timedelta(days=365 * 10)
         account = InvestmentAccount(self.valid_account_number, self.valid_client_number, self.valid_balance, ten_years_ago)
         expected_charge = InvestmentAccount.BASE_SERVICE_CHARGE  # $2.50
@@ -54,7 +70,10 @@ class TestInvestmentAccount(unittest.TestCase):
         self.assertEqual(expected_charge, round(actual_charge, 2))
 
     def test_get_service_charges_within_ten_years(self):
-        """Test get_service_charges when date created is within the last 10 years."""
+        """Test get_service_charges when date created is within the last 10 years.
+
+        This test verifies that the service charge is calculated correctly for accounts created within the last 10 years.
+        """
         recent_date = date.today() - timedelta(days=365 * 5)  # Within 10 years
         account = InvestmentAccount(self.valid_account_number, self.valid_client_number, self.valid_balance, recent_date, self.valid_management_fee)
         expected_charge = InvestmentAccount.BASE_SERVICE_CHARGE + self.valid_management_fee  # $2.50 + $2.00
@@ -62,7 +81,10 @@ class TestInvestmentAccount(unittest.TestCase):
         self.assertEqual(expected_charge, round(actual_charge, 2))
 
     def test_str_more_than_ten_years(self):
-        """Test __str__ when date created is more than 10 years ago."""
+        """Test __str__ when date created is more than 10 years ago.
+
+        This test verifies that the string representation of the account is correct for accounts older than 10 years.
+        """
         old_date = date.today() - timedelta(days=365 * 11)  # More than 10 years ago
         account = InvestmentAccount(self.valid_account_number, self.valid_client_number, self.valid_balance, old_date)
         expected_str = (f"<InvestmentAccount Management Fee: Waived "
@@ -70,7 +92,10 @@ class TestInvestmentAccount(unittest.TestCase):
         self.assertEqual(str(account), expected_str)
 
     def test_str_within_ten_years(self):
-        """Test __str__ when date created is within the last 10 years."""
+        """Test __str__ when date created is within the last 10 years.
+
+        This test verifies that the string representation of the account is correct for accounts created within the last 10 years.
+        """
         recent_date = date.today() - timedelta(days=365 * 5)  # Within 10 years
         account = InvestmentAccount(self.valid_account_number, self.valid_client_number, self.valid_balance, recent_date, self.valid_management_fee)
         expected_str = (f"<InvestmentAccount Management Fee: ${self.valid_management_fee:.2f} "
@@ -79,5 +104,6 @@ class TestInvestmentAccount(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
 
 
