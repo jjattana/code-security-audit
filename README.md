@@ -19,3 +19,6 @@ In this assignment, I will extend the `BankAccount` class by creating new types 
 ## Polymorphism
 
 Polymorphism in this assignment was achieved through method overriding in the `BankAccount` subclasses: `ChequingAccount`, `SavingsAccount`, and `InvestmentAccount`. Each subclass implements its own version of the `get_service_charges()` and `__str__()` methods, allowing them to provide specific behaviors while maintaining a common interface defined in the `BankAccount` class. This enables different account types to be used interchangeably, allowing for dynamic behavior based on the object's actual class.
+
+## Assignmet 3
+ In this assignment the Strategy Pattern will be applied to simplify and add scalability to the service charge functionality. In addition, the Observer Pattern will be introduced. Using the Observer Pattern a client will be notified whenever a large transaction takes place and/or whenever an account balance drops below a minimum value.
