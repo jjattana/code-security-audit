@@ -5,11 +5,10 @@ Author: Jashanpreet Kaur Jattana
 
 from datetime import date
 from bank_account.bank_account import BankAccount
+from patterns.strategy.minimun_balance_strategy import MinimumBalanceStrategy
 
 class SavingsAccount(BankAccount):
     """Class representing a savings account, inheriting from BankAccount."""
-    
-    SERVICE_CHARGE_PREMIUM = 2.00  # Premium multiplier for service charges when balance is below minimum
 
     def __init__(self, account_number: int, client_number: int, balance: float, date_created: date, minimum_balance: float):
         """Initialize a SavingsAccount instance.
@@ -23,25 +22,22 @@ class SavingsAccount(BankAccount):
         """
         super().__init__(account_number, client_number, balance, date_created)
         
-        self.balance = float(balance)  # Ensure balance is a float
+        self.balance = float(balance)  
         try:
             self._minimum_balance = float(minimum_balance)  # Set minimum balance
         except ValueError:
-            self._minimum_balance = 50.0  # Default minimum balance if conversion fails
+            self._minimum_balance = 50.0  
+
+        self._service_charge_strategy = MinimumBalanceStrategy(minimum_balance=self._minimum_balance)
 
     def get_service_charges(self) -> float:
         """Calculate the service charges for the account.
 
-        If the balance is above the minimum balance, a lower service charge is applied.
-        If the balance is below the minimum, a premium service charge is applied.
-
         Returns:
             float: The calculated service charge.
         """
-        if self.balance >= self._minimum_balance:
-            return 0.50  # Standard service charge
-        else:
-            return 0.50 * self.SERVICE_CHARGE_PREMIUM  # Premium service charge
+        # Use the strategy to calculate service charges based on the current balance
+        return self._service_charge_strategy.calculate_service_charges(self.balance)
 
     def __str__(self) -> str:
         """Return a string representation of the SavingsAccount.
@@ -55,6 +51,3 @@ class SavingsAccount(BankAccount):
             f"Balance: ${self.balance:.2f}\n"  
             f"Minimum Balance: ${self._minimum_balance:.2f} Account Type: Savings"
         )
-
-
-

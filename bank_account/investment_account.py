@@ -1,89 +1,46 @@
 """
-Description: 
+Description:
 Author: Jashanpreet Kaur Jattana
 """
 
 from datetime import date
 from bank_account.bank_account import BankAccount
+from patterns.strategy.management_fee_strategy import ManagementFeeStrategy  
 
 class InvestmentAccount(BankAccount):
-    """Represents an investment account, inheriting from BankAccount.
-
-    Attributes:
-        BASE_SERVICE_CHARGE (float): The base service charge for the account.
-        MANAGEMENT_FEE (float): The standard management fee for the account.
-        WAIVED_FEE (float): The waived fee status for the management fee.
     """
-    
-    BASE_SERVICE_CHARGE = 2.50  
-    MANAGEMENT_FEE = 0.50        
-    WAIVED_FEE = 0               
+    A class representing an Investment Account, which extends the BankAccount class.
+    """
 
-    def __init__(self, account_number: int, client_number: int, balance: float, date_created: date, management_fee: float = WAIVED_FEE):
-        """Initializes an InvestmentAccount object.
+    def __init__(self, account_number: int, client_number: int, account_holder: str, balance: float, date_created: date, management_fee: float = 0.0):
+        """
+        Initializes an InvestmentAccount object.
 
         Args:
             account_number (int): The account number.
             client_number (int): The client number associated with the account.
+            account_holder (str): The name of the account holder.
             balance (float): The initial balance of the account.
             date_created (date): The date the account was created.
-            management_fee (float, optional): The management fee for the account. Default is WAIVED_FEE.
-
-        Raises:
-            ValueError: If the management fee is negative.
+            management_fee (float, optional): The management fee for the account. Default is 0.0.
         """
-        self._balance = float(balance)
-        self._date_created = date_created
+        super().__init__(account_number, client_number, account_holder, balance, date_created)
         
-        if not isinstance(management_fee, (int, float)) or management_fee < 0:
-            raise ValueError("Management fee cannot be negative.")
-        
-        super().__init__(account_number, client_number, self._balance, self._date_created)  
-        
-        self.management_fee = management_fee  
+        # Initialize ManagementFeeStrategy for service charge calculations
+        self._service_charge_strategy = ManagementFeeStrategy(management_fee, date_created)
 
-    @property
-    def date_created(self):
-        """Returns the date the account was created."""
-        return self._date_created
-
-    def get_service_charges(self) -> float:
-        """Calculate the service charges based on the account age and management fee.
-
-        Returns:
-            float: The calculated service charges.
+    def get_service_charges(self):
         """
-        account_age_years = self.calculate_account_age()
+        Calculate service charges using the ManagementFeeStrategy.
 
-        if account_age_years < 10:
-            return self.BASE_SERVICE_CHARGE + self.management_fee  
-        elif account_age_years == 10:
-            return self.BASE_SERVICE_CHARGE  
-        else:  
-            return self.BASE_SERVICE_CHARGE + self.MANAGEMENT_FEE  
-
-    def calculate_account_age(self) -> int:
-        """Calculates the age of the account in years.
-
-        Returns:
-            int: The age of the account in years.
+        :return: The calculated service charge
         """
-        age = (date.today() - self._date_created).days // 365
-        return age
+        return self._service_charge_strategy.calculate_service_charges(self.balance)
 
-    def __str__(self) -> str:
-        """String representation of the InvestmentAccount object.
-
-        Returns:
-            str: A string describing the InvestmentAccount instance, including the management fee status.
-        """
-        if self.management_fee == self.WAIVED_FEE:
-            fee_status = "Waived"
-        else:
-            fee_status = f"${self.management_fee:.2f}"  
-
-        return (f"<{self.__class__.__name__} "
-                f"Management Fee: {fee_status} "
-                f"Account Type: Investment>")
-
-
+    def __str__(self):
+        """Returns a string representation of the InvestmentAccount object."""
+        return (f"Account Number: {self.account_number}\n"
+                f"Client Number: {self.client_number}\n"
+                f"Account Holder: {self.account_holder}\n"
+                f"Balance: ${self.balance:.2f}\n"
+                f"Account Type: Investment")

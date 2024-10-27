@@ -5,18 +5,20 @@ Author: Jashanpreet Kaur Jattana
 
 from abc import ABC, abstractmethod
 from datetime import date
+from patterns.strategy.service_charge_strategy import ServiceChargeStrategy  
 
 class BankAccount(ABC):
     """
     Abstract base class for a bank account.
     Cannot be instantiated directly. Subclasses must implement the get_service_charges method.
     """
-    
+
     def __init__(self, account_number, client_number, account_holder, balance, date_created=None):
         """
         Initializes a BankAccount object with the common attributes.
 
         :param account_number: The account number of the bank account
+        :param client_number: The client number of the account holder
         :param account_holder: The name of the account holder
         :param balance: The balance of the bank account
         :param date_created: The date the account was created (defaults to today's date if not provided)
@@ -25,20 +27,33 @@ class BankAccount(ABC):
         self.client_number = client_number
         self.account_holder = account_holder
         self.balance = balance
-        
+
         # Validate the date_created argument. If not a date, use today's date.
         if isinstance(date_created, date):
             self._date_created = date_created
         else:
             self._date_created = date.today()
 
+        # Initialize service charge strategy 
+        self._service_charge_strategy = None
+
     @abstractmethod
     def get_service_charges(self):
         """
-        Abstract method to calculate and return the service charges for the bank account.
+        Calculate and return the service charges for the bank account using the assigned strategy.
         Must be implemented by subclasses.
         """
-        pass
+        if self._service_charge_strategy is None:
+            raise NotImplementedError("Service charge strategy not set.")
+        return self._service_charge_strategy.calculate_service_charges(self.balance)
+
+    def set_service_charge_strategy(self, strategy: ServiceChargeStrategy):
+        """
+        Set the service charge strategy for this account.
+
+        :param strategy: An instance of a ServiceChargeStrategy subclass
+        """
+        self._service_charge_strategy = strategy
 
     def deposit(self, amount):
         """
@@ -86,40 +101,3 @@ class BankAccount(ABC):
             'balance': self.balance,
             'date_created': self._date_created
         }
-
-
-class ChequingAccount(BankAccount):
-    """
-    Concrete subclass of BankAccount representing a chequing account.
-    """
-
-    def get_service_charges(self):
-        """
-        Return the service charges for the chequing account.
-
-        Chequing accounts incur a 2% service charge.
-        :return: The calculated service charges based on the account balance
-        """
-        return self.balance * 0.02  # Example: 2% service charge for chequing accounts
-
-
-class SavingsAccount(BankAccount):
-    """
-    Concrete subclass of BankAccount representing a savings account.
-    """
-
-    def get_service_charges(self):
-        """
-        Return the service charges for the savings account.
-
-        Savings accounts incur a 1% service charge.
-        :return: The calculated service charges based on the account balance
-        """
-        return self.balance * 0.01  # Example: 1% service charge for savings accounts
-
-
-
-
-
-
-
