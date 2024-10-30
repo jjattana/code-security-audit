@@ -1,5 +1,5 @@
 from typing import List
-from observer import Observer
+from .observer import Observer
 
 class Subject:
     def __init__(self) -> None:
