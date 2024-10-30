@@ -6,12 +6,15 @@ Author: Jashanpreet Kaur Jattana
 from abc import ABC, abstractmethod
 from datetime import date
 from patterns.strategy.service_charge_strategy import ServiceChargeStrategy
+from patterns.observer.subject import Subject
 
-class BankAccount(ABC):
+class BankAccount(Subject, ABC):
     """
     Abstract base class for a bank account.
     Cannot be instantiated directly. Subclasses must use a ServiceChargeStrategy for calculating service charges.
     """
+    LOW_BALANCE_LEVEL = 50.00
+    LARGE_TRANSACTION_THRESHOLD = 10000.00
     
     def __init__(self, account_number, client_number, account_holder, balance, service_charge_strategy: ServiceChargeStrategy, date_created=None):
         """
@@ -24,6 +27,7 @@ class BankAccount(ABC):
         :param service_charge_strategy: A ServiceChargeStrategy instance for calculating service charges
         :param date_created: The date the account was created (defaults to today's date if not provided)
         """
+        super().__init__()   # Initialize subject
         self.account_number = account_number
         self.client_number = client_number
         self.account_holder = account_holder
@@ -40,6 +44,22 @@ class BankAccount(ABC):
         :return: The calculated service charges
         """
         return self.service_charge_strategy.calculate_service_charges(self)
+    
+    def update_balance(self, amount):
+        """
+        Update the balance of the account by the specified amount.
+
+        :param amount: The amount to add to the balance (positive for deposit, negative for withdrawal)
+        """
+        self.balance += amount
+
+        # Check for low balance
+        if self.balance < self.LOW_BALANCE_LEVEL:
+            self.notify(f"Low balance warning ${self.balance:.2f}: on account {self.account_number}.")
+
+        # Check for large transaction
+        if abs(amount) > self.LARGE_TRANSACTION_THRESHOLD:
+            self.notify(f"Large transaction ${amount:.2f}: on account {self.account_number}.")
 
     def deposit(self, amount):
         """
@@ -89,19 +109,4 @@ class BankAccount(ABC):
         }
 
 
-class ChequingAccount(BankAccount):
-    """
-    Concrete subclass of BankAccount representing a chequing account.
-    """
 
-    def __init__(self, account_number, client_number, account_holder, balance, service_charge_strategy, date_created=None):
-        super().__init__(account_number, client_number, account_holder, balance, service_charge_strategy, date_created)
-
-
-class SavingsAccount(BankAccount):
-    """
-    Concrete subclass of BankAccount representing a savings account.
-    """
-
-    def __init__(self, account_number, client_number, account_holder, balance, service_charge_strategy, date_created=None):
-        super().__init__(account_number, client_number, account_holder, balance, service_charge_strategy, date_created)
