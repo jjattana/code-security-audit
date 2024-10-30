@@ -1,5 +1,3 @@
-# patterns/observer/subject.py
-
 from typing import List
 from observer import Observer
 

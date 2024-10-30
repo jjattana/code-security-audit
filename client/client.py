@@ -3,8 +3,10 @@ Description: Defines the Client class with validation for client attributes and 
 Author: Jashanpreet Kaur Jattana
 """
 
-
+from datetime import datetime
 from email_validator import EmailNotValidError, validate_email
+from patterns.observer.observer import Observer
+from utility.file_utils import simulate_send_email
 
 class Client:
     def __init__(self, client_number, first_name, last_name, email_address):
@@ -76,3 +78,16 @@ class Client:
         """
         return f"{self.__last_name}, {self.__first_name} [{self.__client_number}] - {self.__email_address}"
 
+    # Update method for Observer pattern
+    def update(self, message: str) -> None:
+        """
+        Receives a notification and simulates sending an email with the alert details.
+        
+        Args:
+            message (str): The message containing update information from the subject.
+        """
+        subject = f"ALERT: Unusual Activity: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        email_message = f"Notification for {self.client_number}: {self.first_name} {self.last_name}: {message}"
+        
+        # Simulate sending the email
+        simulate_send_email(self.email_address, subject, email_message)
