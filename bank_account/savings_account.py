@@ -5,7 +5,7 @@ Author: Jashanpreet Kaur Jattana
 
 from datetime import date
 from bank_account.bank_account import BankAccount
-from patterns.strategy.minimun_balance_strategy import MinimumBalanceStrategy
+from patterns.strategy.minimun_balance_strategy import MinimumBalanceStrategy 
 
 class SavingsAccount(BankAccount):
     """Class representing a savings account, inheriting from BankAccount."""
@@ -22,13 +22,10 @@ class SavingsAccount(BankAccount):
         """
         super().__init__(account_number, client_number, balance, date_created)
         
-        self.balance = float(balance)  
-        try:
-            self._minimum_balance = float(minimum_balance)  # Set minimum balance
-        except ValueError:
-            self._minimum_balance = 50.0  
+        self.balance = float(balance)  # Ensure balance is a float
 
-        self._service_charge_strategy = MinimumBalanceStrategy(minimum_balance=self._minimum_balance)
+        # Define a private attribute for MinimumBalanceStrategy
+        self.__minimum_balance_strategy = MinimumBalanceStrategy(minimum_balance)
 
     def get_service_charges(self) -> float:
         """Calculate the service charges for the account.
@@ -36,8 +33,7 @@ class SavingsAccount(BankAccount):
         Returns:
             float: The calculated service charge.
         """
-        # Use the strategy to calculate service charges based on the current balance
-        return self._service_charge_strategy.calculate_service_charges(self.balance)
+        return self.__minimum_balance_strategy.calculate_service_charges(self)
 
     def __str__(self) -> str:
         """Return a string representation of the SavingsAccount.
@@ -49,5 +45,6 @@ class SavingsAccount(BankAccount):
         return (
             f"Account Number: {self.account_number} "
             f"Balance: ${self.balance:.2f}\n"  
-            f"Minimum Balance: ${self._minimum_balance:.2f} Account Type: Savings"
+            f"Minimum Balance: ${self.__minimum_balance_strategy._MinimumBalanceStrategy__minimum_balance:.2f} "
+            f"Account Type: Savings"
         )

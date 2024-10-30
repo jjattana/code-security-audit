@@ -5,55 +5,41 @@ Author: Jashanpreet Kaur Jattana
 
 from abc import ABC, abstractmethod
 from datetime import date
-from patterns.strategy.service_charge_strategy import ServiceChargeStrategy  
+from patterns.strategy.service_charge_strategy import ServiceChargeStrategy
 
 class BankAccount(ABC):
     """
     Abstract base class for a bank account.
-    Cannot be instantiated directly. Subclasses must implement the get_service_charges method.
+    Cannot be instantiated directly. Subclasses must use a ServiceChargeStrategy for calculating service charges.
     """
-
-    def __init__(self, account_number, client_number, account_holder, balance, date_created=None):
+    
+    def __init__(self, account_number, client_number, account_holder, balance, service_charge_strategy: ServiceChargeStrategy, date_created=None):
         """
-        Initializes a BankAccount object with the common attributes.
+        Initializes a BankAccount object with the common attributes and a service charge strategy.
 
         :param account_number: The account number of the bank account
-        :param client_number: The client number of the account holder
+        :param client_number: The client number associated with the account
         :param account_holder: The name of the account holder
         :param balance: The balance of the bank account
+        :param service_charge_strategy: A ServiceChargeStrategy instance for calculating service charges
         :param date_created: The date the account was created (defaults to today's date if not provided)
         """
         self.account_number = account_number
         self.client_number = client_number
         self.account_holder = account_holder
         self.balance = balance
+        self.service_charge_strategy = service_charge_strategy  # Using strategy pattern for service charges
+        
+        # Validate the date_created argument. 
+        self._date_created = date_created if isinstance(date_created, date) else date.today()
 
-        # Validate the date_created argument. If not a date, use today's date.
-        if isinstance(date_created, date):
-            self._date_created = date_created
-        else:
-            self._date_created = date.today()
-
-        # Initialize service charge strategy 
-        self._service_charge_strategy = None
-
-    @abstractmethod
     def get_service_charges(self):
         """
-        Calculate and return the service charges for the bank account using the assigned strategy.
-        Must be implemented by subclasses.
-        """
-        if self._service_charge_strategy is None:
-            raise NotImplementedError("Service charge strategy not set.")
-        return self._service_charge_strategy.calculate_service_charges(self.balance)
+        Calculate and return the service charges using the associated ServiceChargeStrategy.
 
-    def set_service_charge_strategy(self, strategy: ServiceChargeStrategy):
+        :return: The calculated service charges
         """
-        Set the service charge strategy for this account.
-
-        :param strategy: An instance of a ServiceChargeStrategy subclass
-        """
-        self._service_charge_strategy = strategy
+        return self.service_charge_strategy.calculate_service_charges(self)
 
     def deposit(self, amount):
         """
@@ -101,3 +87,21 @@ class BankAccount(ABC):
             'balance': self.balance,
             'date_created': self._date_created
         }
+
+
+class ChequingAccount(BankAccount):
+    """
+    Concrete subclass of BankAccount representing a chequing account.
+    """
+
+    def __init__(self, account_number, client_number, account_holder, balance, service_charge_strategy, date_created=None):
+        super().__init__(account_number, client_number, account_holder, balance, service_charge_strategy, date_created)
+
+
+class SavingsAccount(BankAccount):
+    """
+    Concrete subclass of BankAccount representing a savings account.
+    """
+
+    def __init__(self, account_number, client_number, account_holder, balance, service_charge_strategy, date_created=None):
+        super().__init__(account_number, client_number, account_holder, balance, service_charge_strategy, date_created)
