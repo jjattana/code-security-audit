@@ -6,6 +6,8 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import csv
 from datetime import datetime
 import logging
+from bank_account.bank_account import BankAccount
+from client.client import Client
 
 # *******************************************************************************
 # GIVEN LOGGING AND FILE ACCESS CODE
@@ -55,9 +57,28 @@ def load_data()->tuple[dict,dict]:
     accounts = {}
 
     # READ CLIENT DATA 
-    with open(clients_csv_path, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)
-        
+    try:
+        with open(clients_csv_path, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+
+            for record in reader:
+                try:
+                    client_number = int(record['client_number'])
+                    first_name = record['first_name']
+                    last_name = record['last_name']
+                    email_address = record['email']
+
+                    client = Client(client_number, first_name, last_name, email_address)
+
+                    client_listing[client_number] = client
+
+                except Exception as e:
+                    logging.error(f"Unable to create client from record {record}: {e}")
+
+    except FileNotFoundError:
+        logging.error("clients.csv file not found.")
+    except Exception as e:
+        logging.error(f"Error reading client data: {e}")
 
     # READ ACCOUNT DATA
     with open(accounts_csv_path, newline='') as csvfile:
