@@ -7,6 +7,9 @@ import csv
 from datetime import datetime
 import logging
 from bank_account.bank_account import BankAccount
+from bank_account.chequing_account import ChequingAccount
+from bank_account.investment_account import InvestmentAccount
+from bank_account.savings_account import SavingsAccount
 from client.client import Client
 
 # *******************************************************************************
@@ -81,11 +84,82 @@ def load_data()->tuple[dict,dict]:
         logging.error(f"Error reading client data: {e}")
 
     # READ ACCOUNT DATA
-    with open(accounts_csv_path, newline='') as csvfile:
-        reader = csv.DictReader(csvfile)  
+    try:
+        with open(accounts_csv_path, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)  
+
+            for record in reader:
+                try:
+                    account_number = record['account_number']
+                    client_number = record['client_number']
+                    account_holder = record['account_holder']
+                    balance = record['balance']
+                    date_created = record['date_created']
+                    account_type = record['account_type']
+                    overdraft_limit = record.get('overdraft_limit', None)
+                    overdraft_rate = record.get('overdraft_rate', None)
+                    management_fee = record.get('management_fee', None)
+                    minimum_balance = record.get('minimum_balance', None)
+
+                    try:
+                        balance = float(balance)
+                        if overdraft_limit:
+                            overdraft_limit = float(overdraft_limit)
+                        if overdraft_rate:
+                            overdraft_rate = float(overdraft_rate)
+                        if management_fee:
+                            management_fee = float(management_fee)
+                        if minimum_balance:
+                            minimum_balance = float(minimum_balance)
+                    except ValueError as e:
+                        logging.error(f"Unable to convert value for account {account_number}: {e}")
+                        continue  # Skip to the next record
+
+
+                    if account_type == 'ChequingAccount':
+                        try:
+                            account = ChequingAccount(
+                                account_number, client_number, account_holder, 
+                                balance, overdraft_limit, overdraft_rate, date_created
+                            )
+                        except Exception as e:
+                            logging.error(f"Unable to create ChequingAccount: {e}")
+                            continue
+                    elif account_type == 'InvestmentAccount':
+                        try:
+                            account = InvestmentAccount(
+                                account_number, client_number, balance, date_created, management_fee
+                            )
+                        except Exception as e:
+                            logging.error(f"Unable to create InvestmentAccount: {e}")
+                            continue
+                    elif account_type == 'SavingsAccount':
+                        try:
+                            account = SavingsAccount(
+                                account_number, client_number, balance, date_created, minimum_balance
+                            )
+                        except Exception as e:
+                            logging.error(f"Unable to create SavingsAccount: {e}")
+                            continue
+                    else:
+                        logging.error(f"Not a valid account type for account {account_number}: {account_type}")
+                        continue
+
+                    if client_number in client_listing:
+                        accounts[account_number] = account  
+                    else:
+                        logging.error(f"Bank Account {account_number}: Client {client_number} not found in client_listing")
+
+                except Exception as e:
+                    logging.error(f"Error processing record {record}: {e}")
+
+    except FileNotFoundError:
+        logging.error("accounts.csv file not found.")
+    except Exception as e:
+        logging.error(f"Error reading account data: {e}")
 
     # RETURN STATEMENT
-    
+    return client_listing, accounts
 
 
 def update_data(updated_account: BankAccount) -> None:
