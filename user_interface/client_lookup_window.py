@@ -81,4 +81,44 @@ class ClientLookupWindow(LookupWindow):
 
         account_details_window = AccountDetailsWindow(bank_account)
         account_details_window.exec_()
+
+    def update_data(self, account: BankAccount) -> None:
+        """
+        Updates the account balance in the account_table and accounts dictionary.
+        """
+
+        for row in range(self.account_table.rowCount()):
+            account_number_in_table = self.account_table.item(row, 0).text()
+
+            if account_number_in_table == str(account.account_number):
+
+                self.account_table.setItem(row, 1, 
+                                           QTableWidgetItem(f"${account.balance:,.2f}"))
+
+                self.accounts[account.account_number] = account
+
+                manage_data.update_data(account)
+                break
+
+    @Slot(int, int)
+    def __on_select_account(self, row: int, column: int) -> None:
+        """
+        Handles selection of an account and opens the AccountDetailsWindow.
+        """
+        account_number = self.account_table.item(row, 0).text()
+
+        if not account_number:
+            QMessageBox.warning(self, "Invalid Selection", "Please select a valid account.")
+            return
+
+        if int(account_number) in self.accounts:
+            account = self.accounts[int(account_number)]
+
+            account_details_window = AccountDetailsWindow(account)
+            account_details_window.balance_updated.connect(self.update_data)
+
+            account_details_window.exec_()
+        else:
+            QMessageBox.warning(self, "Bank Account does not Exist", 
+                                "The selected account does not exist.")
        

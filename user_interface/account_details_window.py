@@ -1,5 +1,5 @@
 from ui_superclasses.details_window import DetailsWindow
-from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QMessageBox, QTableWidgetItem
 from PySide6.QtCore import Signal
 from bank_account.bank_account import BankAccount
 import copy
@@ -8,6 +8,8 @@ class AccountDetailsWindow(DetailsWindow):
     """
     A class used to display account details and perform bank account transactions.
     """
+    balance_updated = Signal(BankAccount)
+
     def __init__(self, account: BankAccount) -> None:
         """
         Initializes a new instance of the ExtendedAccountDetails window.
@@ -56,6 +58,7 @@ class AccountDetailsWindow(DetailsWindow):
 
             self.transaction_amount_edit.setText("")
             self.transaction_amount_edit.setFocus()
+            self.balance_updated.emit(self.account)
 
         except Exception as e:
             QMessageBox.critical(
