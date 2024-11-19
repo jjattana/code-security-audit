@@ -8,6 +8,28 @@ from user_interface.manage_data import update_data
 from bank_account.bank_account import BankAccount
 
 class ClientLookupWindow(LookupWindow):
+    """
+    A window for looking up and managing client and account details.
+
+    Inherits:
+        LookupWindow: Base class for lookup windows.
+
+    Attributes:
+        client_listing (dict): A dictionary mapping client numbers to Client objects.
+        accounts (dict): A dictionary mapping account numbers to BankAccount objects.
+
+    Methods:
+        __init__():
+            Initializes the ClientLookupWindow, loads data, and sets up event connections.
+        on_lookup_client():
+            Handles client lookups by client number, displaying relevant client and account data.
+        on_select_account(row, column):
+            Opens the AccountDetailsWindow for the selected account from the table.
+        update_data(account):
+            Updates the account balance in the account table and persists the change.
+        __on_select_account(row, column):
+            Handles account selection and ensures valid account details are displayed.
+    """
     def __init__(self):
         """
         Initializes the ClientLookupWindow with data and sets up event connections.

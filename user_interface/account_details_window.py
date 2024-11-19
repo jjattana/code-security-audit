@@ -6,7 +6,22 @@ import copy
 
 class AccountDetailsWindow(DetailsWindow):
     """
-    A class used to display account details and perform bank account transactions.
+    A window that displays account details and allows for transactions (deposit/withdraw) on a bank account.
+
+    Inherits:
+        DetailsWindow: Base class for details windows.
+
+    Attributes:
+        balance_updated (Signal): Signal emitted when the account balance is updated.
+        account (BankAccount): The bank account to display and perform transactions on.
+
+    Methods:
+        __init__(account):
+            Initializes the AccountDetailsWindow, sets up the UI, and connects signals.
+        on_apply_transaction():
+            Handles deposit or withdrawal transactions, updates the account balance, and emits the balance_updated signal.
+        on_exit():
+            Closes the AccountDetailsWindow and returns to the Client Lookup Window.
     """
     balance_updated = Signal(BankAccount)
 
