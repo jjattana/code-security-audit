@@ -42,6 +42,8 @@ class ClientLookupWindow(LookupWindow):
 
         self.account_table.cellClicked.connect(self.on_select_account)
 
+        self.filter_button.clicked.connect(self.on_filter_clicked)
+
     def on_lookup_client(self):
         """Handles the lookup process for a client based on the entered client number."""
         client_number_text = self.client_number_edit.text().strip()
@@ -84,6 +86,7 @@ class ClientLookupWindow(LookupWindow):
                 self.account_table.setItem(row_position, 3, account_type_item)
 
         self.account_table.resizeColumnsToContents()
+        self.toggle_filter(False)
     
     @Slot(int, int)
     def on_select_account(self, row: int, column: int) -> None:
@@ -119,28 +122,64 @@ class ClientLookupWindow(LookupWindow):
 
                 self.accounts[account.account_number] = account
 
-                manage_data.update_data(account)
+                update_data(account)
                 break
 
-    @Slot(int, int)
-    def __on_select_account(self, row: int, column: int) -> None:
+    def on_filter_clicked(self):
         """
-        Handles selection of an account and opens the AccountDetailsWindow.
+        Handles the filtering of account records based on user-defined criteria.
         """
-        account_number = self.account_table.item(row, 0).text()
+        if self.filter_button.text() == "Apply Filter":
+            # Get the selected column index and the filter text
+            filter_column = self.filter_combo_box.currentIndex()
+            filter_text = self.filter_edit.text().strip().lower()
 
-        if not account_number:
-            QMessageBox.warning(self, "Invalid Selection", "Please select a valid account.")
-            return
+            for row in range(self.account_table.rowCount()):
+                # Get the cell text for the specified column in the current row
+                cell_item = self.account_table.item(row, filter_column)
+                cell_text = cell_item.text().strip().lower() if cell_item else ""
 
-        if int(account_number) in self.accounts:
-            account = self.accounts[int(account_number)]
+                # Determine whether to hide the row based on the filter text
+                if filter_text not in cell_text:
+                    self.account_table.setRowHidden(row, True)
+                else:
+                    self.account_table.setRowHidden(row, False)
 
-            account_details_window = AccountDetailsWindow(account)
-            account_details_window.balance_updated.connect(self.update_data)
-
-            account_details_window.exec_()
+            self.toggle_filter(filter_applied=True)
         else:
-            QMessageBox.warning(self, "Bank Account does not Exist", 
-                                "The selected account does not exist.")
+            # Reset the filtering to show all rows
+            for row in range(self.account_table.rowCount()):
+                self.account_table.setRowHidden(row, False)
+
+            self.toggle_filter(filter_applied=False)
+
+    def toggle_filter(self, filter_on: bool) -> None:
+        """
+        Toggles the display of the filter widgets to indicate whether filtering is currently in place.
+
+        Args:
+        filter_on (bool): True if filtering is applied, False otherwise.
+        """
+        self.filter_button.setEnabled(True)
+
+        if filter_on:
+            # Filtering is ON
+            self.filter_button.setText("Reset")
+            self.filter_combo_box.setEnabled(False)
+            self.filter_edit.setEnabled(False)
+            self.filter_label.setText("Data is Currently Filtered")
+        else:
+            # Filtering is OFF
+            self.filter_button.setText("Apply Filter")
+            self.filter_combo_box.setEnabled(True)
+            self.filter_edit.setEnabled(True)
+            self.filter_edit.clear()  # Clear the filter_edit text
+            self.filter_combo_box.setCurrentIndex(0)  # Reset combobox to the first option
+
+            # Show all rows in the account table
+            for row in range(self.account_table.rowCount()):
+                self.account_table.setRowHidden(row, False)
+
+            self.filter_label.setText("Data is Not Currently Filtered")
+
        
