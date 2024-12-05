@@ -35,3 +35,6 @@ In this assignment, I will create a responsive Windows application using PySide6
 
 ## Event-Driven Programming Paradigm
 The application employs the Event-Driven Programming Paradigm through PySide6's signals and slots mechanism to handle user interactions efficiently. Signals are emitted by events like button clicks or table selections, and corresponding slots (methods) execute actions such as updating account balances or displaying client data. For example, clicking a button to perform a transaction emits a signal that updates the account balance in both the GUI and backend. This ensures the application remains interactive, responsive, and capable of real-time updates and feedback to the user.
+
+## Assignment 5
+In this assignment I will incorporate a filtering algorithm into the GUI application such that the user may filter the bank account listing based on user-defined criteria. Additionally, the project will be wrapped up by generating html help files for each of the classes based on the docstrings coded throughout the semester. As well, the project will be packaged up into a user-friendly installer such that it may be distributed to users.
