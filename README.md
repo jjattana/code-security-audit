@@ -38,3 +38,6 @@ The application employs the Event-Driven Programming Paradigm through PySide6's 
 
 ## Assignment 5
 In this assignment I will incorporate a filtering algorithm into the GUI application such that the user may filter the bank account listing based on user-defined criteria. Additionally, the project will be wrapped up by generating html help files for each of the classes based on the docstrings coded throughout the semester. As well, the project will be packaged up into a user-friendly installer such that it may be distributed to users.
+
+## Filtering
+Filtering in this application allows users to narrow down account data by specific criteria, enhancing usability. Users can select a column, input a keyword, and apply the filter to hide non-matching rows. The "Reset" button restores all rows.The "Reset" button restores all rows. This feature, integrated into the ClientLookupWindow class, helps users quickly locate relevant account details, improving efficiency and focus.
