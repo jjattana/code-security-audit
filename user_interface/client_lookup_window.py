@@ -33,6 +33,9 @@ class ClientLookupWindow(LookupWindow):
     def __init__(self):
         """
         Initializes the ClientLookupWindow with data and sets up event connections.
+
+        Returns:
+            None
         """
         super().__init__()
 
@@ -45,7 +48,12 @@ class ClientLookupWindow(LookupWindow):
         self.filter_button.clicked.connect(self.on_filter_clicked)
 
     def on_lookup_client(self):
-        """Handles the lookup process for a client based on the entered client number."""
+        """
+        Handles the lookup process for a client based on the entered client number.
+        
+        Returns:
+            None
+        """
         client_number_text = self.client_number_edit.text().strip()
         
         try:
@@ -90,7 +98,16 @@ class ClientLookupWindow(LookupWindow):
     
     @Slot(int, int)
     def on_select_account(self, row: int, column: int) -> None:
-        """Handles the selection of an account from the table to open the Account Details window."""
+        """
+        Handles the selection of an account from the table to open the Account Details window.
+        
+        Args:
+            row (int): The row index of the selected table item.
+            column (int): The column index of the selected table item.
+            
+        Returns:
+            None
+        """
         account_number_item = self.account_table.item(row, 0)
         account_number = account_number_item.text() if account_number_item else ""
 
@@ -110,6 +127,12 @@ class ClientLookupWindow(LookupWindow):
     def update_data(self, account: BankAccount) -> None:
         """
         Updates the account balance in the account_table and accounts dictionary.
+
+        Args:
+            account (BankAccount): The updated bank account object.
+        
+        Returns:
+            None
         """
 
         for row in range(self.account_table.rowCount()):
@@ -128,6 +151,9 @@ class ClientLookupWindow(LookupWindow):
     def on_filter_clicked(self):
         """
         Handles the filtering of account records based on user-defined criteria.
+
+        Returns:
+            None
         """
         if self.filter_button.text() == "Apply Filter":
             # Get the selected column index and the filter text
@@ -159,6 +185,9 @@ class ClientLookupWindow(LookupWindow):
 
         Args:
         filter_on (bool): True if filtering is applied, False otherwise.
+
+        Returns:
+            None
         """
         self.filter_button.setEnabled(True)
 

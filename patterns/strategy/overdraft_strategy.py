@@ -3,7 +3,7 @@ Description:
 Author: Jashanpreet Kaur Jattana
 """
 
-from service_charge_strategy import ServiceChargeStrategy
+from .service_charge_strategy import ServiceChargeStrategy
 
 
 class OverdraftStrategy(ServiceChargeStrategy):

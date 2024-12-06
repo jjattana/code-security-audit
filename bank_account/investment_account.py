@@ -8,7 +8,10 @@ from bank_account.bank_account import BankAccount
 from patterns.strategy.management_fee_strategy import ManagementFeeStrategy  
 
 class InvestmentAccount(BankAccount):
-    """Represents an investment account, inheriting from BankAccount.
+    """
+    A class representing an Investment Account, which extends the BankAccount class. This class includes 
+    functionality for managing an account balance, calculating service charges based on a management fee, 
+    and calculating the account's age.
 
     Attributes:
         BASE_SERVICE_CHARGE (float): The base service charge for the account.
@@ -16,12 +19,13 @@ class InvestmentAccount(BankAccount):
         WAIVED_FEE (float): The waived fee status for the management fee.
     """
     
-    BASE_SERVICE_CHARGE = 2.50  
+    BASE_SERVICE_CHARGE = 2.50
     MANAGEMENT_FEE = 0.50        
     WAIVED_FEE = 0               
 
     def __init__(self, account_number: int, client_number: int, balance: float, date_created: date, management_fee: float = WAIVED_FEE):
-        """Initializes an InvestmentAccount object.
+        """
+        Initializes an InvestmentAccount object.
 
         Args:
             account_number (int): The account number.
@@ -29,6 +33,9 @@ class InvestmentAccount(BankAccount):
             balance (float): The initial balance of the account.
             date_created (date): The date the account was created.
             management_fee (float, optional): The management fee for the account. Default is WAIVED_FEE.
+
+        Returns:
+            None
 
         Raises:
             ValueError: If the management fee is negative.
@@ -48,11 +55,23 @@ class InvestmentAccount(BankAccount):
 
     @property
     def date_created(self):
-        """Returns the date the account was created."""
+        """
+        Returns the date the account was created.
+        
+        Args:
+            None
+
+        Returns:
+            date: The date when the account was created.
+        """
         return self._date_created
 
     def get_service_charges(self) -> float:
-        """Calculate the service charges using ManagementFeeStrategy.
+        """
+        Calculate the service charges using ManagementFeeStrategy.
+
+        Args:
+            None
 
         Returns:
             float: The calculated service charges.
@@ -60,7 +79,11 @@ class InvestmentAccount(BankAccount):
         return self.__management_fee_strategy.calculate_service_charges(self)
 
     def calculate_account_age(self) -> int:
-        """Calculates the age of the account in years.
+        """
+        Calculates the age of the account in years.
+
+        Args:
+            None
 
         Returns:
             int: The age of the account in years.
@@ -69,7 +92,11 @@ class InvestmentAccount(BankAccount):
         return age
 
     def __str__(self) -> str:
-        """String representation of the InvestmentAccount object.
+        """
+        String representation of the InvestmentAccount object.
+
+        Args:
+            None
 
         Returns:
             str: A string describing the InvestmentAccount instance, including the management fee status.

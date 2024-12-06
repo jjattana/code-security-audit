@@ -12,6 +12,10 @@ class BankAccount(Subject, ABC):
     """
     Abstract base class for a bank account.
     Cannot be instantiated directly. Subclasses must use a ServiceChargeStrategy for calculating service charges.
+
+    Attributes:
+        LOW_BALANCE_LEVEL (float): The threshold below which a balance is considered low.
+        LARGE_TRANSACTION_THRESHOLD (float): The threshold for large transactions that will trigger notifications.
     """
     LOW_BALANCE_LEVEL = 50.00
     LARGE_TRANSACTION_THRESHOLD = 10000.00
@@ -20,12 +24,19 @@ class BankAccount(Subject, ABC):
         """
         Initializes a BankAccount object with the common attributes and a service charge strategy.
 
-        :param account_number: The account number of the bank account
-        :param client_number: The client number associated with the account
-        :param account_holder: The name of the account holder
-        :param balance: The balance of the bank account
-        :param service_charge_strategy: A ServiceChargeStrategy instance for calculating service charges
-        :param date_created: The date the account was created (defaults to today's date if not provided)
+        Args:
+            account_number (int): The account number of the bank account.
+            client_number (int): The client number associated with the account.
+            account_holder (str): The name of the account holder.
+            balance (float): The balance of the bank account.
+            service_charge_strategy (ServiceChargeStrategy): A ServiceChargeStrategy instance for calculating service charges.
+            date_created (date, optional): The date the account was created (defaults to today's date if not provided).
+        
+        Returns:
+            None
+
+        Raises:
+            TypeError: If `date_created` is not of type `date`.
         """
         super().__init__()   # Initialize subject
         self.account_number = account_number
@@ -41,7 +52,14 @@ class BankAccount(Subject, ABC):
         """
         Calculate and return the service charges using the associated ServiceChargeStrategy.
 
-        :return: The calculated service charges
+        Args:
+            None
+        
+        Returns:
+            float: The calculated service charges based on the strategy.
+        
+        Raises:
+            None
         """
         return self.service_charge_strategy.calculate_service_charges(self)
     
@@ -49,7 +67,14 @@ class BankAccount(Subject, ABC):
         """
         Update the balance of the account by the specified amount.
 
-        :param amount: The amount to add to the balance (positive for deposit, negative for withdrawal)
+        Args:
+            amount (float): The amount to add to the balance (positive for deposit, negative for withdrawal).
+        
+        Returns:
+            None
+        
+        Raises:
+            None
         """
         self.balance += amount
 
@@ -65,7 +90,14 @@ class BankAccount(Subject, ABC):
         """
         Deposit the given amount into the bank account.
 
-        :param amount: The amount to deposit
+        Args:
+            amount (float): The amount to deposit.
+        
+        Returns:
+            None
+        
+        Raises:
+            ValueError: If the deposit amount is not positive.
         """
         if amount > 0:
             self.balance += amount
@@ -76,7 +108,14 @@ class BankAccount(Subject, ABC):
         """
         Withdraw the given amount from the bank account if sufficient funds are available.
 
-        :param amount: The amount to withdraw
+        Args:
+            amount (float): The amount to withdraw.
+        
+        Returns:
+            None
+        
+        Raises:
+            ValueError: If the withdrawal amount is not positive or if there are insufficient funds.
         """
         if amount > 0:
             if self.balance >= amount:
@@ -90,7 +129,14 @@ class BankAccount(Subject, ABC):
         """
         Return the current balance of the bank account.
 
-        :return: The balance of the account
+        Args:
+            None
+        
+        Returns:
+            float: The current balance of the account.
+        
+        Raises:
+            None
         """
         return self.balance
 
@@ -98,7 +144,15 @@ class BankAccount(Subject, ABC):
         """
         Return a dictionary containing account details.
 
-        :return: A dictionary with account details
+        Args:
+            None
+        
+        Returns:
+            dict: A dictionary with account details including account number, client number, 
+                  account holder name, balance, and date created.
+        
+        Raises:
+            None
         """
         return {
             'account_number': self.account_number,

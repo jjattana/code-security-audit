@@ -9,7 +9,31 @@ from patterns.observer.observer import Observer
 from utility.file_utils import simulate_send_email
 
 class Client:
+    """
+    Description:
+        The `Client` class represents a bank client with attributes for client number, name, and email address. 
+        It includes validation for input attributes, provides properties for accessing these attributes, 
+        and integrates with the Observer pattern to receive updates and simulate email notifications.
+
+    Attributes:
+        None 
+    """
     def __init__(self, client_number, first_name, last_name, email_address):
+        """
+        Description:
+            Initializes a `Client` object with validated attributes for client number, first name, 
+            last name, and email address.
+
+        Args:
+            client_number (int): The unique identifier for the client.
+            first_name (str): The client's first name. Cannot be blank.
+            last_name (str): The client's last name. Cannot be blank.
+            email_address (str): The client's email address. Validates format and assigns it.
+
+        Raises:
+            ValueError: If client number is not an integer, or if first/last name is blank.
+            EmailNotValidError: If the provided email address is invalid.
+        """
         # Validate client_number
         if type(client_number) != int:  
             raise ValueError("Client number must be an integer.")
@@ -38,8 +62,13 @@ class Client:
     @property
     def client_number(self):
         """
-        Returns the clients's ID
-        :return: client number
+        Retrieves the client's unique identifier.
+
+        Args:
+            None
+
+        Returns:
+            int: The client number.
         """
         return self.__client_number
     
@@ -47,8 +76,13 @@ class Client:
     @property
     def first_name(self):
         """
-        Returns the client's first name
-        :returns: client's first name
+        Retrieves the client's first name.
+
+        Args:
+            None
+
+        Returns:
+            str: The first name of the client.
         """
         return self.__first_name
     
@@ -56,8 +90,13 @@ class Client:
     @property
     def last_name(self):
         """
-        Returns the client's last name
-        :returns: client's last name
+        Retrieves the client's last name.
+
+        Args:
+            None
+
+        Returns:
+            str: The last name of the client.
         """
         return self.__last_name
     
@@ -65,18 +104,28 @@ class Client:
     @property
     def email_address(self):
         """
-        Returns the client's email address
-        :returns: client's email address
+        Retrieves the client's email address.
+
+        Args:
+            None
+
+        Returns:
+            str: The email address of the client.
         """
         return self.__email_address
     
     # __str__ method
     def __str__(self):
         """
-        Returns string representaion of client data
-        :return: A string with the format "last_name, first_name [client_number] - email_address"
+        Provides a string representation of the client's information.
+
+        Args:
+            None
+
+        Returns:
+            str: A string in the format "last_name, first_name [client_number] - email_address".
         """
-        return f"{self.__last_name}, {self.__first_name} [{self.__client_number}] - {self.__email_address}"
+        return f"{self.__first_name}, {self.__last_name} [{self.__client_number}] - {self.__email_address}"
 
     # Update method for Observer pattern
     def update(self, message: str) -> None:
@@ -85,6 +134,9 @@ class Client:
         
         Args:
             message (str): The message containing update information from the subject.
+
+        Returns:
+            None
         """
         subject = f"ALERT: Unusual Activity: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         email_message = f"Notification for {self.client_number}: {self.first_name} {self.last_name}: {message}"

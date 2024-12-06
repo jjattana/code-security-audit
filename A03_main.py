@@ -24,10 +24,10 @@ client_data1 = Client(client_number=105, first_name="Rohit", last_name="Sharma",
 
 # 3a. Create a ChequingAccount object with data of your choice, using the client_number 
 # of the client created in step 2.
-chequing_account = ChequingAccount(account_number= 67890, client_number= client_data1.client_number, initial_balance= 1500.0)
+chequing_account = ChequingAccount(account_number= 67890, client_number= client_data1.client_number, account_holder= "Rohit", initial_balance= 1500.0)
 # 3b. Create a SavingsAccount object with data of your choice, using the client_number 
 # of the client created in step 2.
-savings_account = SavingsAccount(account_number=12345, client_number=client_data1.client_number, balance= 2000.0)
+savings_account = SavingsAccount(account_number=12345, client_number=client_data1.client_number, balance= 2000.0,date_created=date.today(),minimum_balance=500.0)
 
 
 
@@ -48,7 +48,7 @@ savings_account.attach(client_data1)
 client_data2 = Client(client_number=106, first_name="Jashanpreet", last_name="Jattana", email_address="jjattana@pixell-river.com")
 # 5b. Create a SavingsAccount object with data of your choice, using the client_number 
 # of the client created in this step.
-savings_account2 = SavingsAccount(account_number= 57684, client_number=client_data2.client_number, balance = 1000.0)
+savings_account2 = SavingsAccount(account_number= 57684, client_number=client_data2.client_number, balance = 1000.0, date_created=date.today(),minimum_balance=500.0)
 savings_account2.attach(client_data2)
 
 

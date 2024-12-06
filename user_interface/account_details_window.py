@@ -50,7 +50,13 @@ class AccountDetailsWindow(DetailsWindow):
             self.reject()
 
     def on_apply_transaction(self) -> None:
+        """
+        Handles deposit or withdrawal transactions. Updates the account balance and emits the balance_updated signal.
 
+        Raises:
+            ValueError: If the entered transaction amount is not a valid numeric value.
+            Exception: If the deposit or withdrawal operation fails (e.g., insufficient funds).
+        """
         try:
             amount = float(self.transaction_amount_edit.text())
         except ValueError:
